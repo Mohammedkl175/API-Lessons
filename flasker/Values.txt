@@ -1,0 +1,15 @@
+truncate table plants RESTART IDENTITY;
+
+INSERT INTO plants (name,sientific_name,is_poisonuons,primary_color) VALUES ('Bamboo','Bamboosa aridinarifolin',false,'green');
+INSERT INTO plants (name,sientific_name,is_poisonuons,primary_color) VALUES ('Carrot','Daucas carota',false,'orange');
+INSERT INTO plants (name,sientific_name,is_poisonuons,primary_color) VALUES ('Lemon','Citrus limonium',false,'yellow');
+INSERT INTO plants (name,sientific_name,is_poisonuons,primary_color) VALUES ('Spinach','Lactuca sativa',false,'green');
+INSERT INTO plants (name,sientific_name,is_poisonuons,primary_color) VALUES ('Mango','Mangifera indica',false,'orange');
+INSERT INTO plants (name,sientific_name,is_poisonuons,primary_color) VALUES ('Orange','Citrus aurantium',false,'orange');
+INSERT INTO plants (name,sientific_name,is_poisonuons,primary_color) VALUES ('Tomato','Lycopersican esculentum',false,'red');
+INSERT INTO plants (name,sientific_name,is_poisonuons,primary_color) VALUES ('Lily of the Valley','Canvallaria majalis',true,'white');
+INSERT INTO plants (name,sientific_name,is_poisonuons,primary_color) VALUES ('Foxglove','Digitalie',true,'purple');
+INSERT INTO plants (name,sientific_name,is_poisonuons,primary_color) VALUES ('Dieffenbachia','Dieffenbachia seguine',true,'green');
+INSERT INTO plants (name,sientific_name,is_poisonuons,primary_color) VALUES ('Hydrangea','Hydrangea macrophylla',true,'blue');
+INSERT INTO plants (name,sientific_name,is_poisonuons,primary_color) VALUES ('Oleander','Nerium oleander',true,'pink');
+INSERT INTO plants (name,sientific_name,is_poisonuons,primary_color) VALUES ('Water Hemlock','Ciucuta',true,'white');
