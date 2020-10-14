@@ -38,7 +38,7 @@ def create_app(test_config=None):
             return False
         else:
             return None
-
+    
     setup(app)
     # migrate=Migrate(app,db),db.create_all() instead
 
@@ -49,6 +49,40 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-Methods',
                              'GET,PATCH,POST,DELETE,OPTIONS')
         return response
+
+# region Error Handlers
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+            'success': False,
+            'error': 404,
+            'message': "Resource Not Found"
+        }), 404
+
+    @app.errorhandler(422)
+    def unprocessable(error):
+        return jsonify({
+            'success': False,
+            'error': 422,
+            'message': "unprocessable"
+        }), 422
+
+    @app.errorhandler(405)
+    def not_found(error):
+        return jsonify({
+            'success': False,
+            'error': 405,
+            'message': "Method Not Allowed"
+        }), 405
+
+    @app.errorhandler(400)
+    def bad_request(error):
+        return jsonify({
+            'success': False,
+            'error': 400,
+            'message': "Bad Request"
+        }), 400
+# endregion
 
     @app.route('/')
     def hello():
@@ -84,7 +118,7 @@ def create_app(test_config=None):
             if 'primary_color' in body:
                 plant.primary_color = body.get('primary_color')
             plant.Update()
-            return jsonify({'success': True,'id': plant.id})
+            return jsonify({'success': True, 'id': plant.id})
         except:
             abort(400)
 
@@ -96,12 +130,12 @@ def create_app(test_config=None):
                 abort(404)
             plant.Delete()
             selection = Plant.query.order_by(Plant.id).all()
-            current_plants = paginate_plants(request,selection)
+            current_plants = paginate_plants(request, selection)
             return jsonify({
-                'success' : True,
+                'success': True,
                 'deleted': plant.id,
-                'plants':current_plants,
-                'Total_plants':len(selection)
+                'plants': current_plants,
+                'Total_plants': len(selection)
             })
         except:
             abort(422)
@@ -109,20 +143,21 @@ def create_app(test_config=None):
     @app.route('/plants', methods=['POST'])
     def create_plant():
         body = request.get_json()
-        new_name= body.get('name',None)
-        new_sientific_name=body.get('sientific_name',None)
-        new_is_poisonuons=str_to_bool(body.get('is_poisonuons'),None)
-        new_primary_color=body.get('primary_color',None)
+        new_name = body.get('name', None)
+        new_sientific_name = body.get('sientific_name', None)
+        new_is_poisonuons = str_to_bool(body.get('is_poisonuons'))
+        new_primary_color = body.get('primary_color', None)
         try:
-            new_plant = Plant(new_name,new_sientific_name,new_is_poisonuons,new_primary_color)
+            new_plant = Plant(new_name, new_sientific_name,
+                              new_is_poisonuons, new_primary_color)
             new_plant.Add()
             selection = Plant.query.all()
-            current_plants = paginate_plants(request,selection)
+            current_plants = paginate_plants(request, selection)
             return jsonify({
-                'success':True,
-                'created':new_plant.id,
-                'plants':current_plants,
-                'total plants':len(selection)
+                'success': True,
+                'created': new_plant.id,
+                'plants': current_plants,
+                'total plants': len(selection)
             })
         except:
             abort(422)

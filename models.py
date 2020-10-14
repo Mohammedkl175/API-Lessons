@@ -1,10 +1,12 @@
-from flask import Flask
+from flask import Flask,jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-def setup(app):
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres@localhost:5432/plant'
+database_path='postgresql://postgres@localhost:5432/plant'
+
+def setup(app,database_path=database_path):
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app=app
     db.init_app(app)
@@ -18,7 +20,7 @@ class Plant(db.Model):
     is_poisonuons = db.Column(db.Boolean())
     primary_color = db.Column(db.String())
 
-    def _init_(name,sientific_name,is_poisonuons,primary_color):
+    def __init__(self,name,sientific_name,is_poisonuons,primary_color):
         self.name = name
         self.sientific_name = sientific_name
         self.is_poisonuons = is_poisonuons
