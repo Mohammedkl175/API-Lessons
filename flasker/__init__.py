@@ -36,8 +36,6 @@ def create_app(test_config=None):
             return True
         elif s == 'False':
             return False
-        else:
-            return None
     
     setup(app)
     # migrate=Migrate(app,db),db.create_all() instead
@@ -145,20 +143,29 @@ def create_app(test_config=None):
         body = request.get_json()
         new_name = body.get('name', None)
         new_sientific_name = body.get('sientific_name', None)
-        new_is_poisonuons = str_to_bool(body.get('is_poisonuons'))
+        new_is_poisonuons = str_to_bool(body.get('is_poisonuons',None))
         new_primary_color = body.get('primary_color', None)
+        search = body.get('search',None)
         try:
-            new_plant = Plant(new_name, new_sientific_name,
-                              new_is_poisonuons, new_primary_color)
-            new_plant.Add()
-            selection = Plant.query.all()
-            current_plants = paginate_plants(request, selection)
-            return jsonify({
-                'success': True,
-                'created': new_plant.id,
-                'plants': current_plants,
-                'total plants': len(selection)
-            })
+            if search:
+                plants=Plant.query.filter(Plant.name.ilike("{}".format(search))).all()
+                search_plant = [plant.serialize() for plant in plants]
+                return jsonify({
+                    'success':True,
+                    'total plants':len(search_plant),
+                    'plants':search_plant
+                })
+            else:
+                new_plant = Plant(new_name, new_sientific_name,new_is_poisonuons, new_primary_color)
+                new_plant.Add()
+                selection = Plant.query.all()
+                current_plants = paginate_plants(request, selection)
+                return jsonify({
+                    'success': True,
+                    'created': new_plant.id,
+                    'plants': current_plants,
+                    'total plants': len(selection)
+                    })
         except:
             abort(422)
 

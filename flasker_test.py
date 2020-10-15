@@ -94,6 +94,24 @@ class PlantTestCase(unittest.TestCase):
         self.assertEqual(data['success'],False)
         self.assertEqual(data['message'],'Method Not Allowed')
 
+    def test_search_found_plant(self):
+        res = self.client().post('/plants',json={'search':'Carrot'})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code,200)
+        self.assertEqual(data['success'],True)
+        self.assertEqual(data['total plants'],1)
+        self.assertEqual(len(data['plants']),1)
+
+    def test_search_not_found_plant(self):
+        res = self.client().post('/plants',json={'search':'Banana'})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code,200)
+        self.assertEqual(data['success'],True)
+        self.assertEqual(data['total plants'],0)
+        self.assertEqual(len(data['plants']),0)
+
 if __name__ == "__main__":
     unittest.main()
     
