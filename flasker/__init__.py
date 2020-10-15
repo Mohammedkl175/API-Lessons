@@ -88,14 +88,14 @@ def create_app(test_config=None):
 
     @app.route('/plants', methods=['GET'])
     def get_plants():
-        all_plants = Plant.query.all()
-        data = paginate_plants(request, all_plants)
+        selection = Plant.query.all()
+        data = paginate_plants(request, selection)
         if len(data) == 0:
             abort(404)
         else:
             return jsonify({'success': True,
                             'plants': data,
-                            'total_plants': len(all_plants)})
+                            'total_plants': len(selection)})
 
     @app.route('/plants/<int:plant_id>', methods=['GET'])
     def get_specific_plant(plant_id):
@@ -148,8 +148,8 @@ def create_app(test_config=None):
         search = body.get('search',None)
         try:
             if search:
-                plants=Plant.query.filter(Plant.name.ilike("{}".format(search))).all()
-                search_plant = [plant.serialize() for plant in plants]
+                selection=Plant.query.filter(Plant.name.ilike("{}".format(search))).all()
+                search_plant = paginate_plants(request,selection)
                 return jsonify({
                     'success':True,
                     'total plants':len(search_plant),
